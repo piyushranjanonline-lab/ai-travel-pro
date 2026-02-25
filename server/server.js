@@ -13,7 +13,7 @@ app.use(express.static(__dirname));
 app.use(express.json());
 
 // 🔑 PUT YOUR OPENROUTER API KEY HERE
-const OPENROUTER_API_KEY = "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";
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
 
 // homepage
