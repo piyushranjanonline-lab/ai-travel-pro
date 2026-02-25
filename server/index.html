@@ -9,20 +9,20 @@
 
 body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:#0b0f19;
+  background:#0c0a05;
   color:white;
   overflow-x:hidden;
 }
 
-/* ===== Animated Background Glow ===== */
+/* ===== Gold Animated Background Glow ===== */
 
 body::before{
   content:"";
   position:fixed;
-  width:600px;
-  height:600px;
-  background:radial-gradient(circle,#00f2ff55,transparent 70%);
-  top:-200px;
+  width:700px;
+  height:700px;
+  background:radial-gradient(circle,#ffd70055,transparent 70%);
+  top:-250px;
   left:-200px;
   animation:moveGlow 12s infinite alternate ease-in-out;
   z-index:-1;
@@ -31,10 +31,10 @@ body::before{
 body::after{
   content:"";
   position:fixed;
-  width:600px;
-  height:600px;
-  background:radial-gradient(circle,#ff00c855,transparent 70%);
-  bottom:-200px;
+  width:700px;
+  height:700px;
+  background:radial-gradient(circle,#ffae0055,transparent 70%);
+  bottom:-250px;
   right:-200px;
   animation:moveGlow 14s infinite alternate ease-in-out;
   z-index:-1;
@@ -42,10 +42,10 @@ body::after{
 
 @keyframes moveGlow{
   from{transform:translate(0,0)}
-  to{transform:translate(100px,100px)}
+  to{transform:translate(120px,120px)}
 }
 
-/* ===== Center Hero ===== */
+/* ===== Hero ===== */
 
 .hero{
   min-height:100vh;
@@ -65,31 +65,30 @@ body::after{
 }
 
 h2{
-  opacity:.6;
+  opacity:.7;
   font-weight:400;
   margin-bottom:10px;
-  letter-spacing:1px;
 }
 
 h1{
   font-size:48px;
   margin-bottom:30px;
-  background:linear-gradient(90deg,#00f2ff,#ff00c8);
+  background:linear-gradient(90deg,#ffd700,#ffae00);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
 
-/* ===== Input Glass Panel ===== */
+/* ===== Glass Input Card ===== */
 
 .input-card{
-  background:rgba(255,255,255,0.06);
+  background:rgba(255,215,0,0.08);
   backdrop-filter:blur(20px);
-  border:1px solid rgba(255,255,255,0.1);
+  border:1px solid rgba(255,215,0,0.2);
   padding:35px;
   border-radius:20px;
   width:100%;
   max-width:450px;
-  box-shadow:0 0 30px rgba(0,255,255,0.15);
+  box-shadow:0 0 30px rgba(255,215,0,0.2);
 }
 
 input{
@@ -105,7 +104,7 @@ input{
 
 input:focus{
   outline:none;
-  box-shadow:0 0 10px #00f2ff;
+  box-shadow:0 0 10px #ffd700;
 }
 
 button{
@@ -113,19 +112,20 @@ button{
   padding:14px;
   border:none;
   border-radius:10px;
-  background:linear-gradient(90deg,#00f2ff,#ff00c8);
-  color:white;
+  background:linear-gradient(90deg,#ffd700,#ffae00);
+  color:black;
   cursor:pointer;
   font-size:15px;
+  font-weight:bold;
   transition:.3s;
 }
 
 button:hover{
-  transform:scale(1.03);
-  box-shadow:0 0 15px #00f2ff;
+  transform:scale(1.05);
+  box-shadow:0 0 15px #ffd700;
 }
 
-/* ===== Results Section ===== */
+/* ===== Results ===== */
 
 .results{
   width:100%;
@@ -137,8 +137,8 @@ button:hover{
 }
 
 .card{
-  background:rgba(255,255,255,0.05);
-  border:1px solid rgba(255,255,255,0.1);
+  background:rgba(255,215,0,0.06);
+  border:1px solid rgba(255,215,0,0.2);
   padding:25px;
   border-radius:20px;
   backdrop-filter:blur(15px);
@@ -147,7 +147,7 @@ button:hover{
 
 .card h3{
   margin-bottom:10px;
-  color:#00f2ff;
+  color:#ffd700;
 }
 
 .book-btn{
@@ -156,8 +156,8 @@ button:hover{
   width:100%;
   border:none;
   border-radius:10px;
-  background:linear-gradient(90deg,#ff00c8,#00f2ff);
-  color:white;
+  background:linear-gradient(90deg,#ffae00,#ffd700);
+  color:black;
   font-weight:bold;
   cursor:pointer;
   transition:.3s;
@@ -174,11 +174,24 @@ button:hover{
 
 /* ===== Loader ===== */
 
+.loader-wrapper{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:120px;
+}
+
 .loader{
-  text-align:center;
-  padding:40px;
-  font-size:18px;
-  opacity:.8;
+  width:60px;
+  height:60px;
+  border:5px solid rgba(255,215,0,0.2);
+  border-top:5px solid #ffd700;
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+  100%{transform:rotate(360deg)}
 }
 
 /* ===== Mobile ===== */
@@ -194,7 +207,7 @@ button:hover{
 <div id="hero" class="hero">
 
   <h2>Built by Piyush • AI Travel Planner</h2>
-  <h1>Future Travel Intelligence</h1>
+  <h1>Golden Travel Intelligence</h1>
 
   <div class="input-card">
     <input id="origin" placeholder="From (e.g. Delhi)">
@@ -221,7 +234,9 @@ async function searchTravel(){
   document.getElementById("hero").classList.add("shift-up");
 
   document.getElementById("results").innerHTML=
-    `<div class="loader">AI is analyzing optimal transport routes...</div>`;
+  `<div class="loader-wrapper">
+     <div class="loader"></div>
+   </div>`;
 
   try{
 
