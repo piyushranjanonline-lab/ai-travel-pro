@@ -11,92 +11,87 @@ body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
   color:white;
-  padding:40px;
+  overflow-x:hidden;
 }
 
-.container{
-  max-width:900px;
-  margin:auto;
+/* ===== CENTERED HERO SECTION ===== */
+
+.hero{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  transition:all .6s ease;
+  padding:20px;
 }
 
-/* ===== Animated transport ===== */
-.transport-row{
-  position:relative;
-  height:70px;
-  margin-bottom:25px;
+.hero.shift-up{
+  min-height:40vh;
+  justify-content:flex-start;
+  padding-top:80px;
 }
 
-.route-line{
-  position:absolute;
-  top:50%;
-  left:40px;
-  right:40px;
-  height:2px;
-  background:linear-gradient(to right,transparent,rgba(255,255,255,0.6),transparent);
+h2{
+  opacity:.7;
+  font-weight:400;
+  margin-bottom:10px;
 }
 
-.route-line::after{
-  content:"";
-  position:absolute;
-  width:60px;
-  height:2px;
-  background:white;
-  animation:routeMove 2.5s linear infinite;
+h1{
+  font-size:42px;
+  margin-bottom:30px;
 }
 
-@keyframes routeMove{
-  from{left:-60px}
-  to{left:100%}
+/* ===== INPUT CARD ===== */
+
+.input-card{
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(20px);
+  padding:30px;
+  border-radius:20px;
+  width:100%;
+  max-width:450px;
+  box-shadow:0 20px 40px rgba(0,0,0,.4);
 }
-
-.transport{
-  position:absolute;
-  top:12px;
-  width:42px;
-  height:42px;
-  animation:move 3s ease-in-out infinite;
-}
-
-.transport:nth-child(2){animation-delay:0s}
-.transport:nth-child(3){animation-delay:.4s}
-.transport:nth-child(4){animation-delay:.8s}
-
-@keyframes move{
-  0%{left:0;opacity:.4}
-  50%{opacity:1}
-  100%{left:calc(100% - 42px);opacity:.4}
-}
-
-h1{margin-bottom:20px}
 
 input{
-  padding:12px;
-  margin:10px 0;
   width:100%;
+  padding:14px;
+  margin-bottom:15px;
   border:none;
-  border-radius:8px;
+  border-radius:10px;
+  font-size:15px;
 }
 
 button{
-  padding:12px;
   width:100%;
+  padding:14px;
   border:none;
-  border-radius:8px;
+  border-radius:10px;
   background:black;
   color:white;
   cursor:pointer;
+  font-size:15px;
 }
 
-.cards{
-  margin-top:25px;
+/* ===== RESULTS ===== */
+
+.results{
+  width:100%;
+  max-width:900px;
+  margin:40px auto;
   display:grid;
-  gap:15px;
+  gap:20px;
+  padding:0 20px 60px;
 }
 
 .card{
   background:rgba(255,255,255,0.15);
-  padding:16px;
-  border-radius:16px;
+  padding:20px;
+  border-radius:18px;
+  backdrop-filter:blur(10px);
+  animation:fadeIn .5s ease;
 }
 
 .book-btn{
@@ -115,63 +110,43 @@ button{
   background:#ff5f3c;
 }
 
-/* loader */
-.loader-container{
-  margin-top:20px;
-  padding:20px;
-  border-radius:16px;
-  background:rgba(255,255,255,0.1);
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(15px)}
+  to{opacity:1;transform:translateY(0)}
 }
 
-.shimmer{
-  height:15px;
-  width:100%;
-  border-radius:8px;
-  margin-bottom:12px;
-  background:linear-gradient(90deg,
-    rgba(255,255,255,0.1) 25%,
-    rgba(255,255,255,0.3) 50%,
-    rgba(255,255,255,0.1) 75%);
-  background-size:200% 100%;
-  animation:shimmer 1.5s infinite;
+/* ===== LOADER ===== */
+
+.loader{
+  text-align:center;
+  padding:30px;
+  opacity:.8;
 }
 
-@keyframes shimmer{
-  0%{background-position:200% 0}
-  100%{background-position:-200% 0}
-}
+/* ===== MOBILE ===== */
 
-/* mobile */
 @media(max-width:768px){
-  body{padding:15px;}
+  h1{font-size:32px}
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div id="hero" class="hero">
 
-<div class="transport-row">
-  <div class="route-line"></div>
-  <img class="transport" src="https://img.icons8.com/ios-filled/100/ffffff/airplane-take-off.png">
-  <img class="transport" src="https://img.icons8.com/ios-filled/100/ffffff/train.png">
-  <img class="transport" src="https://img.icons8.com/ios-filled/100/ffffff/bus.png">
-</div>
+  <h2>Built by Piyush • AI Travel Planner</h2>
+  <h1>Plan Your Journey</h1>
 
-<h2 style="opacity:.7;font-weight:400">
-Built by Piyush • AI Travel Planner
-</h2>
-<h1>Let's plan</h1>
-
-<input id="origin" placeholder="From (e.g. Delhi)">
-<input id="destination" placeholder="To (e.g. Mumbai)">
-
-<button onclick="searchTravel()">Find Best Routes</button>
-
-<div id="result"></div>
+  <div class="input-card">
+    <input id="origin" placeholder="From (e.g. Delhi)">
+    <input id="destination" placeholder="To (e.g. Mumbai)">
+    <button onclick="searchTravel()">Find Best Routes</button>
+  </div>
 
 </div>
+
+<div id="results" class="results"></div>
 
 <script>
 
@@ -181,18 +156,15 @@ async function searchTravel(){
   const destination=document.getElementById("destination").value;
 
   if(!origin || !destination){
-    document.getElementById("result").innerHTML=
-    `<div class="card" style="background:#ff4d4d;">Enter both cities</div>`;
+    alert("Please enter both cities.");
     return;
   }
 
-  document.getElementById("result").innerHTML=`
-    <div class="loader-container">
-      <div class="shimmer"></div>
-      <div class="shimmer"></div>
-      <div class="shimmer"></div>
-    </div>
-  `;
+  // shift hero upward
+  document.getElementById("hero").classList.add("shift-up");
+
+  document.getElementById("results").innerHTML=
+    `<div class="loader">Thinking like AI...</div>`;
 
   try{
 
@@ -205,47 +177,52 @@ async function searchTravel(){
     const data=await res.json();
     const obj=JSON.parse(data.result);
 
-    document.getElementById("result").innerHTML=`
-    <div class="cards">
+    renderCards(obj);
 
-      <div class="card">
-        <h3>✈️ Flight</h3>
-        <p><b>Price:</b> ${obj.flight.price}</p>
-        <p><b>Time:</b> ${obj.flight.time}</p>
-        <p><b>Book:</b> ${obj.flight.booking}</p>
-        <a href="https://www.makemytrip.com/flights/" target="_blank">
-          <button class="book-btn">Book Flight</button>
-        </a>
-      </div>
-
-      <div class="card">
-        <h3>🚆 Train</h3>
-        <p><b>Price:</b> ${obj.train.price}</p>
-        <p><b>Time:</b> ${obj.train.time}</p>
-        <p><b>Book:</b> ${obj.train.booking}</p>
-        <a href="https://www.irctc.co.in" target="_blank">
-          <button class="book-btn">Book Train</button>
-        </a>
-      </div>
-
-      <div class="card">
-        <h3>🚌 Bus</h3>
-        <p><b>Price:</b> ${obj.bus.price}</p>
-        <p><b>Time:</b> ${obj.bus.time}</p>
-        <p><b>Book:</b> ${obj.bus.booking}</p>
-        <a href="https://www.redbus.in" target="_blank">
-          <button class="book-btn">Book Bus</button>
-        </a>
-      </div>
-
-    </div>`;
-  }
-  catch{
-    document.getElementById("result").innerHTML=
-    `<div class="card" style="background:#ff4d4d;">Server error</div>`;
+  }catch{
+    document.getElementById("results").innerHTML=
+      `<div class="card" style="background:#ff4d4d">Server error</div>`;
   }
 }
 
+function renderCards(obj){
+
+  document.getElementById("results").innerHTML=`
+
+  <div class="card">
+    <h3>✈️ Flight</h3>
+    <p><b>Price:</b> ${obj.flight.price}</p>
+    <p><b>Time:</b> ${obj.flight.time}</p>
+    <p><b>Book:</b> ${obj.flight.booking}</p>
+    <a href="https://www.makemytrip.com/flights/" target="_blank">
+      <button class="book-btn">Book Flight</button>
+    </a>
+  </div>
+
+  <div class="card">
+    <h3>🚆 Train</h3>
+    <p><b>Price:</b> ${obj.train.price}</p>
+    <p><b>Time:</b> ${obj.train.time}</p>
+    <p><b>Book:</b> ${obj.train.booking}</p>
+    <a href="https://www.irctc.co.in" target="_blank">
+      <button class="book-btn">Book Train</button>
+    </a>
+  </div>
+
+  <div class="card">
+    <h3>🚌 Bus</h3>
+    <p><b>Price:</b> ${obj.bus.price}</p>
+    <p><b>Time:</b> ${obj.bus.time}</p>
+    <p><b>Book:</b> ${obj.bus.booking}</p>
+    <a href="https://www.redbus.in" target="_blank">
+      <button class="book-btn">Book Bus</button>
+    </a>
+  </div>
+
+  `;
+}
+
 </script>
+
 </body>
 </html>
