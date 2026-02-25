@@ -9,12 +9,43 @@
 
 body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  background:#0b0f19;
   color:white;
   overflow-x:hidden;
 }
 
-/* ===== CENTERED HERO SECTION ===== */
+/* ===== Animated Background Glow ===== */
+
+body::before{
+  content:"";
+  position:fixed;
+  width:600px;
+  height:600px;
+  background:radial-gradient(circle,#00f2ff55,transparent 70%);
+  top:-200px;
+  left:-200px;
+  animation:moveGlow 12s infinite alternate ease-in-out;
+  z-index:-1;
+}
+
+body::after{
+  content:"";
+  position:fixed;
+  width:600px;
+  height:600px;
+  background:radial-gradient(circle,#ff00c855,transparent 70%);
+  bottom:-200px;
+  right:-200px;
+  animation:moveGlow 14s infinite alternate ease-in-out;
+  z-index:-1;
+}
+
+@keyframes moveGlow{
+  from{transform:translate(0,0)}
+  to{transform:translate(100px,100px)}
+}
+
+/* ===== Center Hero ===== */
 
 .hero{
   min-height:100vh;
@@ -24,35 +55,41 @@ body{
   align-items:center;
   transition:all .6s ease;
   padding:20px;
+  text-align:center;
 }
 
 .hero.shift-up{
   min-height:40vh;
   justify-content:flex-start;
-  padding-top:80px;
+  padding-top:100px;
 }
 
 h2{
-  opacity:.7;
+  opacity:.6;
   font-weight:400;
   margin-bottom:10px;
+  letter-spacing:1px;
 }
 
 h1{
-  font-size:42px;
+  font-size:48px;
   margin-bottom:30px;
+  background:linear-gradient(90deg,#00f2ff,#ff00c8);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
-/* ===== INPUT CARD ===== */
+/* ===== Input Glass Panel ===== */
 
 .input-card{
-  background:rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.06);
   backdrop-filter:blur(20px);
-  padding:30px;
+  border:1px solid rgba(255,255,255,0.1);
+  padding:35px;
   border-radius:20px;
   width:100%;
   max-width:450px;
-  box-shadow:0 20px 40px rgba(0,0,0,.4);
+  box-shadow:0 0 30px rgba(0,255,255,0.15);
 }
 
 input{
@@ -62,6 +99,13 @@ input{
   border:none;
   border-radius:10px;
   font-size:15px;
+  background:rgba(255,255,255,0.08);
+  color:white;
+}
+
+input:focus{
+  outline:none;
+  box-shadow:0 0 10px #00f2ff;
 }
 
 button{
@@ -69,64 +113,78 @@ button{
   padding:14px;
   border:none;
   border-radius:10px;
-  background:black;
+  background:linear-gradient(90deg,#00f2ff,#ff00c8);
   color:white;
   cursor:pointer;
   font-size:15px;
+  transition:.3s;
 }
 
-/* ===== RESULTS ===== */
+button:hover{
+  transform:scale(1.03);
+  box-shadow:0 0 15px #00f2ff;
+}
+
+/* ===== Results Section ===== */
 
 .results{
   width:100%;
   max-width:900px;
-  margin:40px auto;
+  margin:50px auto;
   display:grid;
-  gap:20px;
+  gap:25px;
   padding:0 20px 60px;
 }
 
 .card{
-  background:rgba(255,255,255,0.15);
-  padding:20px;
-  border-radius:18px;
-  backdrop-filter:blur(10px);
-  animation:fadeIn .5s ease;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  padding:25px;
+  border-radius:20px;
+  backdrop-filter:blur(15px);
+  animation:fadeIn .6s ease;
+}
+
+.card h3{
+  margin-bottom:10px;
+  color:#00f2ff;
 }
 
 .book-btn{
-  margin-top:10px;
+  margin-top:12px;
   padding:10px;
   width:100%;
   border:none;
   border-radius:10px;
-  background:#ff7e5f;
+  background:linear-gradient(90deg,#ff00c8,#00f2ff);
   color:white;
   font-weight:bold;
   cursor:pointer;
+  transition:.3s;
 }
 
 .book-btn:hover{
-  background:#ff5f3c;
+  transform:scale(1.05);
 }
 
 @keyframes fadeIn{
-  from{opacity:0;transform:translateY(15px)}
+  from{opacity:0;transform:translateY(20px)}
   to{opacity:1;transform:translateY(0)}
 }
 
-/* ===== LOADER ===== */
+/* ===== Loader ===== */
 
 .loader{
   text-align:center;
-  padding:30px;
+  padding:40px;
+  font-size:18px;
   opacity:.8;
 }
 
-/* ===== MOBILE ===== */
+/* ===== Mobile ===== */
 
 @media(max-width:768px){
-  h1{font-size:32px}
+  h1{font-size:34px}
 }
 </style>
 </head>
@@ -136,12 +194,12 @@ button{
 <div id="hero" class="hero">
 
   <h2>Built by Piyush • AI Travel Planner</h2>
-  <h1>Plan Your Journey</h1>
+  <h1>Future Travel Intelligence</h1>
 
   <div class="input-card">
     <input id="origin" placeholder="From (e.g. Delhi)">
     <input id="destination" placeholder="To (e.g. Mumbai)">
-    <button onclick="searchTravel()">Find Best Routes</button>
+    <button onclick="searchTravel()">Explore Route</button>
   </div>
 
 </div>
@@ -156,15 +214,14 @@ async function searchTravel(){
   const destination=document.getElementById("destination").value;
 
   if(!origin || !destination){
-    alert("Please enter both cities.");
+    alert("Enter both cities");
     return;
   }
 
-  // shift hero upward
   document.getElementById("hero").classList.add("shift-up");
 
   document.getElementById("results").innerHTML=
-    `<div class="loader">Options on the way....</div>`;
+    `<div class="loader">AI is analyzing optimal transport routes...</div>`;
 
   try{
 
@@ -181,7 +238,7 @@ async function searchTravel(){
 
   }catch{
     document.getElementById("results").innerHTML=
-      `<div class="card" style="background:#ff4d4d">Server error</div>`;
+      `<div class="card" style="background:#ff0033;">System error</div>`;
   }
 }
 
