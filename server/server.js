@@ -5,14 +5,14 @@ import axios from "axios";
 
 const app = express();
 
-// fix path
+// path fix
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(express.static(__dirname));
 app.use(express.json());
 
-// 🔑 PUT YOUR OPENROUTER API KEY HERE
+// 🔐 API key from Render environment
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
 
@@ -22,67 +22,73 @@ app.get("/", (req,res)=>{
 });
 
 
-// 🚀 MAIN TRAVEL ROUTE
+// 🌍 MAIN ROUTE
 app.post("/travel", async (req,res)=>{
 
   const { origin, destination } = req.body;
 
-  console.log("Travel search:", origin, "→", destination);
+  if(!origin || !destination){
+    return res.json({ result:"Invalid input" });
+  }
 
-  const dest = destination.toLowerCase();
   const from = origin.toLowerCase();
+  const dest = destination.toLowerCase();
 
-  let noFlight = false;
-  let noTrain = false;
+  let restrictionMessage = "";
+  let internationalRoute = false;
 
-  // 🏔 hill stations list
-  const hillStations = [
-    "manali","shimla","kasol","spiti",
-    "dharamshala","mussoorie","nainital"
+  // 🌍 detect international
+  const indianCities = [
+    "delhi","mumbai","bangalore","kolkata","chennai",
+    "hyderabad","pune","jaipur","ahmedabad","goa",
+    "manali","shimla","lucknow"
   ];
 
-  // if either origin OR destination is hill station
-  if(hillStations.includes(dest) || hillStations.includes(from)){
-    noFlight = true;
-    noTrain = true;
+  if(!indianCities.includes(from) || !indianCities.includes(dest)){
+    internationalRoute = true;
   }
 
-  // ✈️ leh special case
-  if(dest === "leh" || from === "leh"){
-    noTrain = true;
+  // 🏔 hill stations (no flight/train both sides)
+  const hillStations = [
+    "manali","shimla","kasol","spiti","dharamshala","mussoorie"
+  ];
+
+  if(hillStations.includes(from) || hillStations.includes(dest)){
+    restrictionMessage += "No direct flight or train available. Bus or car required. ";
   }
 
-  // 🚗 short distance routes
-  if(
-    (from === "delhi" && dest === "jaipur") ||
-    (from === "jaipur" && dest === "delhi")
-  ){
-    noFlight = true;
+  // leh special
+  if(from==="leh" || dest==="leh"){
+    restrictionMessage += "Flight only option. No train available. ";
   }
 
-  if(
-    (from === "mumbai" && dest === "pune") ||
-    (from === "pune" && dest === "mumbai")
-  ){
-    noFlight = true;
+  // short routes
+  if((from==="delhi" && dest==="jaipur") || (from==="jaipur" && dest==="delhi")){
+    restrictionMessage += "Very short distance. Flight not recommended. ";
   }
 
-  // build restriction message for AI
-  let restrictionMessage = "";
-
-  if(noFlight){
-    restrictionMessage += "Flight not available or not recommended for this route. ";
+  if((from==="mumbai" && dest==="pune") || (from==="pune" && dest==="mumbai")){
+    restrictionMessage += "Short distance route. Train or cab better. ";
   }
 
-  if(noTrain){
-    restrictionMessage += "Train not available for this route. ";
+  // 🌍 international rules
+  if(internationalRoute){
+    restrictionMessage += `
+This is an international route.
+Flights are main option.
+Trains only if both cities in same continent (Europe/Japan).
+Bus only for nearby countries.
+Mention passport and visa briefly.
+Use Skyscanner, Google Flights, Expedia for booking.
+`;
   }
-
 
   try{
 
     const prompt = `
-User wants to travel from ${origin} to ${destination} in India.
+User wants to travel from ${origin} to ${destination}.
+
+Route type: ${internationalRoute ? "International" : "Domestic"}
 
 Route intelligence:
 ${restrictionMessage}
@@ -95,21 +101,19 @@ Return ONLY JSON:
 }
 
 Rules:
-If flight not available → write "Not Available"
-If train not available → write "Not Available"
-Bus usually available.
+If transport not available → write "Not Available"
 Keep answers short.
 `;
 
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
-        model: "openrouter/auto",
-        messages:[{ role:"user", content: prompt }]
+        model:"openrouter/auto",
+        messages:[{role:"user",content:prompt}]
       },
       {
         headers:{
-          "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+          "Authorization":`Bearer ${OPENROUTER_API_KEY}`,
           "Content-Type":"application/json"
         }
       }
@@ -120,17 +124,36 @@ Keep answers short.
     // remove markdown if AI adds ```
     text = text.replace(/```json|```/g,"").trim();
 
-    res.json({ result: text });
+    // 🛡 crash protection if bad JSON
+    try{
+      JSON.parse(text);
+      res.json({ result:text });
+    }catch{
+      res.json({
+        result: JSON.stringify({
+          flight:{price:"Check manually",time:"Check manually",booking:"Skyscanner"},
+          train:{price:"Check manually",time:"Check manually",booking:"RailEurope"},
+          bus:{price:"Check manually",time:"Check manually",booking:"Bus services"}
+        })
+      });
+    }
 
   }catch(err){
-    console.log("AI error:", err.response?.data || err.message);
-    res.json({ result:"AI error. Try again." });
+    console.log("AI error:",err.message);
+
+    res.json({
+      result: JSON.stringify({
+        flight:{price:"Error",time:"Error",booking:"Error"},
+        train:{price:"Error",time:"Error",booking:"Error"},
+        bus:{price:"Error",time:"Error",booking:"Error"}
+      })
+    });
   }
 
 });
 
 
-// start server
+// 🌐 cloud port
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, ()=>{
