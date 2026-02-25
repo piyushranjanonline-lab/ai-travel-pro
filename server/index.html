@@ -9,19 +9,19 @@
 
 body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:#0c0a05;
+  background:#07121f;
   color:white;
   overflow-x:hidden;
 }
 
-/* ===== Gold Animated Background Glow ===== */
+/* ===== Futuristic Light Blue Glow Background ===== */
 
 body::before{
   content:"";
   position:fixed;
   width:700px;
   height:700px;
-  background:radial-gradient(circle,#ffd70055,transparent 70%);
+  background:radial-gradient(circle,#00eaff55,transparent 70%);
   top:-250px;
   left:-200px;
   animation:moveGlow 12s infinite alternate ease-in-out;
@@ -33,7 +33,7 @@ body::after{
   position:fixed;
   width:700px;
   height:700px;
-  background:radial-gradient(circle,#ffae0055,transparent 70%);
+  background:radial-gradient(circle,#00aaff55,transparent 70%);
   bottom:-250px;
   right:-200px;
   animation:moveGlow 14s infinite alternate ease-in-out;
@@ -73,7 +73,7 @@ h2{
 h1{
   font-size:48px;
   margin-bottom:30px;
-  background:linear-gradient(90deg,#ffd700,#ffae00);
+  background:linear-gradient(90deg,#00eaff,#00aaff);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
@@ -81,14 +81,14 @@ h1{
 /* ===== Glass Input Card ===== */
 
 .input-card{
-  background:rgba(255,215,0,0.08);
+  background:rgba(0,234,255,0.08);
   backdrop-filter:blur(20px);
-  border:1px solid rgba(255,215,0,0.2);
+  border:1px solid rgba(0,234,255,0.25);
   padding:35px;
   border-radius:20px;
   width:100%;
   max-width:450px;
-  box-shadow:0 0 30px rgba(255,215,0,0.2);
+  box-shadow:0 0 30px rgba(0,234,255,0.2);
 }
 
 input{
@@ -104,7 +104,7 @@ input{
 
 input:focus{
   outline:none;
-  box-shadow:0 0 10px #ffd700;
+  box-shadow:0 0 10px #00eaff;
 }
 
 button{
@@ -112,7 +112,7 @@ button{
   padding:14px;
   border:none;
   border-radius:10px;
-  background:linear-gradient(90deg,#ffd700,#ffae00);
+  background:linear-gradient(90deg,#00eaff,#00aaff);
   color:black;
   cursor:pointer;
   font-size:15px;
@@ -122,7 +122,7 @@ button{
 
 button:hover{
   transform:scale(1.05);
-  box-shadow:0 0 15px #ffd700;
+  box-shadow:0 0 15px #00eaff;
 }
 
 /* ===== Results ===== */
@@ -137,8 +137,8 @@ button:hover{
 }
 
 .card{
-  background:rgba(255,215,0,0.06);
-  border:1px solid rgba(255,215,0,0.2);
+  background:rgba(0,234,255,0.06);
+  border:1px solid rgba(0,234,255,0.25);
   padding:25px;
   border-radius:20px;
   backdrop-filter:blur(15px);
@@ -147,7 +147,7 @@ button:hover{
 
 .card h3{
   margin-bottom:10px;
-  color:#ffd700;
+  color:#00eaff;
 }
 
 .book-btn{
@@ -156,7 +156,7 @@ button:hover{
   width:100%;
   border:none;
   border-radius:10px;
-  background:linear-gradient(90deg,#ffae00,#ffd700);
+  background:linear-gradient(90deg,#00aaff,#00eaff);
   color:black;
   font-weight:bold;
   cursor:pointer;
@@ -165,11 +165,6 @@ button:hover{
 
 .book-btn:hover{
   transform:scale(1.05);
-}
-
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(20px)}
-  to{opacity:1;transform:translateY(0)}
 }
 
 /* ===== Loader ===== */
@@ -184,14 +179,19 @@ button:hover{
 .loader{
   width:60px;
   height:60px;
-  border:5px solid rgba(255,215,0,0.2);
-  border-top:5px solid #ffd700;
+  border:5px solid rgba(0,234,255,0.2);
+  border-top:5px solid #00eaff;
   border-radius:50%;
   animation:spin 1s linear infinite;
 }
 
 @keyframes spin{
   100%{transform:rotate(360deg)}
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
 }
 
 /* ===== Mobile ===== */
@@ -206,8 +206,8 @@ button:hover{
 
 <div id="hero" class="hero">
 
-  <h2>Built by Piyush • AI Travel Planner</h2>
-  <h1>Golden Travel Intelligence</h1>
+  <h1>AI Travel Planner</h1>
+  <h2>Built by Piyush</h2>
 
   <div class="input-card">
     <input id="origin" placeholder="From (e.g. Delhi)">
